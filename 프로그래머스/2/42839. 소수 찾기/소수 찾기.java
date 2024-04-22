@@ -8,11 +8,11 @@ class Solution {
 
     public int solution(String numbers) {
         int answer = 0;
-        length = numbers.length(); // Corrected variable name to "numbers"
+        length = numbers.length();
         visited = new boolean[length];
         arr = new int[length];
         for (int i = 0; i < length; i++) {
-            arr[i] = Character.getNumericValue(numbers.charAt(i)); // Corrected variable name to "numbers"
+            arr[i] = Character.getNumericValue(numbers.charAt(i));
         }
 
         dfs("", 0);
@@ -25,7 +25,7 @@ class Solution {
         }
 
         System.out.println(answer);
-        return answer; // Added return statement to match the return type of the method
+        return answer;
     }
 
     public void dfs(String s, int depth) {
@@ -47,7 +47,7 @@ class Solution {
         if (num == 0 || num == 1) {
             return false;
         }
-        for (int i = 2; i * i <= num; i++) { // Optimized prime checking loop
+        for (int i = 2; i * i <= num; i++) {
             if (num % i == 0) {
                 return false;
             }
