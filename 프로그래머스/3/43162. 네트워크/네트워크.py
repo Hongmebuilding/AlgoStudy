@@ -1,6 +1,6 @@
 def solution(n, computers):
     answer = 0
-    visited = []
+    visited = set()
     queue = []
     for i in range(n):
         if i not in visited:
@@ -9,7 +9,7 @@ def solution(n, computers):
             while queue:
                 node = queue.pop(0)
                 array = computers[node]
-                visited.append(node)
+                visited.add(node)
                 for i, number in enumerate(array):
                     if i not in visited and number == 1:
                         queue.append(i)
