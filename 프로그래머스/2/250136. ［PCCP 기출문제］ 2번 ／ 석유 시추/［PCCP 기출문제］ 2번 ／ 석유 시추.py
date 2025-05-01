@@ -1,43 +1,45 @@
 def solution(land):
-    answer = 0
-    n, m = len(land), len(land[0])
-    visited = [[False for _ in range(m)] for _ in range(n)]  # * 대신 _ 사용
-    cnt_arr = [0] * m
+    m = len(land[0])
+    n = len(land)
+    queue = []
+    visited = [[False for _ in range(m)] for _ in range(n)]
+    startX, startY = 0, 0
+    oilSizeByColumn = [0] * m
     
-    def bfs(j, i):
-        queue = [[j, i]]
-        visited[j][i] = True
-        area = 1  # 영역 크기 초기화 (시작 지점 포함)
-        columns = set([i])  # 시작 열 추가
-        
-        while queue:
-            r, c = queue.pop(0)
-            dr = [-1,0,1,0]
-            dc = [0,1,0,-1]
-            
-            for k in range(4):
-                nr = r + dr[k]
-                nc = c + dc[k]
+    for i in range(n):
+        for j in range(m):
+            if land[i][j] == 1 and not visited[i][j]:
+                startX, startY = j, i
+                queue.append([startX, startY])
+                oil_size, columns = findFraction(land, visited, queue)
                 
-                if (
-                    0 <= nr < n and 0 <= nc < m and
-                    land[nr][nc] == 1 and not visited[nr][nc]
-                ):
-                    queue.append([nr,nc])
-                    visited[nr][nc] = True
-                    area += 1
-                    columns.add(nc)
+                for col in columns:
+                    oilSizeByColumn[col] += oil_size
+    
+    return max(oilSizeByColumn)
+
+def findFraction(land, visited, queue):
+    m = len(land[0])
+    n = len(land)
+    dx = [0,0,-1,1]
+    dy = [1,-1,0,0]
+    columns = set()
+    oil_size = 0
+    
+    while queue:
+        x, y = queue.pop(0)
+    
+        if visited[y][x]:
+            continue
+            
+        visited[y][x] = True
+        oil_size += 1
+        columns.add(x)
         
-        # 영역이 포함된 모든 열에 영역 크기 추가
-        for column in columns:
-            cnt_arr[column] += area
-                    
-    for j in range(n):
-        for i in range(m):
-            if land[j][i] == 1 and not visited[j][i]:
-                bfs(j, i)
-    
-    # 최대값 찾기
-    answer = max(cnt_arr)  # 배열 전체에서 최대값 찾기
-    
-    return answer
+        # 4방면 탐색
+        for i in range(4):
+            newX, newY = x + dx[i], y + dy[i]
+            if 0 <= newX < m and 0 <= newY < n and land[newY][newX] == 1 and not visited[newY][newX]:
+                    queue.append([newX, newY])
+            
+    return oil_size, columns
